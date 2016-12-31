@@ -5,6 +5,9 @@
     <version value="1" />
 
     <list>
+        <mapping class="com.jia.fantatic4.reunionnote.db.ProvinceDB"/>
+        <mapping class="com.jia.fantatic4.reunionnote.db.CityDB"/>
+        <mapping class="com.jia.fantatic4.reunionnote.db.CountyDB"/>
     </list>
 
 </litepal>
