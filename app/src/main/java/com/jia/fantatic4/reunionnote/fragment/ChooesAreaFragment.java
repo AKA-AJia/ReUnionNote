@@ -2,6 +2,7 @@ package com.jia.fantatic4.reunionnote.fragment;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jia.fantatic4.reunionnote.R;
+import com.jia.fantatic4.reunionnote.activity.WeatherDetailsActivity;
 import com.jia.fantatic4.reunionnote.constant.Constant;
 import com.jia.fantatic4.reunionnote.db.CityDB;
 import com.jia.fantatic4.reunionnote.db.CountyDB;
@@ -90,6 +92,11 @@ public class ChooesAreaFragment extends Fragment {
                 }else if (currentLevel==LEVEL_CITY){
                     selectedCity=cityList.get(position);
                     queryCounty();
+                }else if (currentLevel==LEVEL_COUNTY){
+                    Intent intent=new Intent(getActivity(), WeatherDetailsActivity.class);
+                    intent.putExtra("weather_id",countyList.get(position).getWeatherId());
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -97,7 +104,11 @@ public class ChooesAreaFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(currentLevel==LEVEL_COUNTY){
+                    queryCity();
+                }else if (currentLevel==LEVEL_CITY){
+                    queryProvince();
+                }
             }
         });
 

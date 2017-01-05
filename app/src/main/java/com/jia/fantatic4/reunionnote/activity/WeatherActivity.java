@@ -1,6 +1,9 @@
 package com.jia.fantatic4.reunionnote.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
@@ -17,5 +20,12 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_weather);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getString("weather",null)!=null){
+            Intent intent=new Intent(WeatherActivity.this,WeatherDetailsActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

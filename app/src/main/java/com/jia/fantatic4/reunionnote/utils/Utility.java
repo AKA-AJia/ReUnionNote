@@ -6,6 +6,8 @@ package com.jia.fantatic4.reunionnote.utils;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+import com.jia.fantatic4.reunionnote.bean.Weather;
 import com.jia.fantatic4.reunionnote.db.CityDB;
 import com.jia.fantatic4.reunionnote.db.CountyDB;
 import com.jia.fantatic4.reunionnote.db.ProvinceDB;
@@ -80,5 +82,21 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    public static Weather handleWeatherResponse(String response){
+        try {
+            if(response != null && response.startsWith("\ufeff"))
+            {
+                response =  response.substring(1);
+            }
+            JSONObject jsonObject=new JSONObject(response);
+            JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
+            String weatherContent=jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
