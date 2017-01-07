@@ -5,6 +5,7 @@ package com.jia.fantatic4.reunionnote.utils;
  */
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jia.fantatic4.reunionnote.bean.Weather;
@@ -86,10 +87,11 @@ public class Utility {
 
     public static Weather handleWeatherResponse(String response){
         try {
-            if(response != null && response.startsWith("\ufeff"))
-            {
-                response =  response.substring(1);
-            }
+//            if(response != null && response.startsWith("\ufeff"))
+//            {
+//                response =  response.substring(1);
+//            }
+            Log.d("jia","response====="+response);
             JSONObject jsonObject=new JSONObject(response);
             JSONArray jsonArray=jsonObject.getJSONArray("HeWeather");
             String weatherContent=jsonArray.getJSONObject(0).toString();

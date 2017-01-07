@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -93,7 +94,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
 
     private void requestWeather(String weather_id) {
         String weatherUrl = Constant.WEATHER_BASE_URL + weather_id + Constant.WEATHER_KEY;
-        System.out.print("url==========="+weatherUrl);
+        Log.d("jia","url==========="+weatherUrl);
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -107,17 +108,23 @@ public class WeatherDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String weatherData = response.body().toString();
-                Weather weatherInfo = Utility.handleWeatherResponse(weatherData);
-                if (weatherInfo != null && "ok".equals(weatherInfo.status)) {
-                    SharedPreferences.Editor editor =
-                            PreferenceManager.getDefaultSharedPreferences(WeatherDetailsActivity.this)
-                                    .edit();
-                    editor.putString("weather", weatherData);
-                    editor.apply();
-                    showWeatherInfo(weatherInfo);
-                }
+            public void onResponse(Call call, final Response response) throws IOException {
+                final String weatherData = response.body().string();
+                final Weather weatherInfo = Utility.handleWeatherResponse(weatherData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (weatherInfo != null && "ok".equals(weatherInfo.status)) {
+                            SharedPreferences.Editor editor =
+                                    PreferenceManager.getDefaultSharedPreferences(WeatherDetailsActivity.this)
+                                            .edit();
+                            editor.putString("weather", weatherData);
+                            editor.apply();
+                            showWeatherInfo(weatherInfo);
+                        }
+                    }
+                });
+
             }
         });
     }
