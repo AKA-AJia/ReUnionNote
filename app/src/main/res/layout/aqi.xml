@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="20dp"
+    android:alpha="0.5"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:layout_margin="20dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:text="空气质量:"
         android:textColor="#fff"
-        android:text="空气质量"
-        android:background="@color/colorPrimary"
-        />
+        android:textSize="20sp" />
 
     <LinearLayout
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="0dp"
@@ -24,19 +27,21 @@
             android:layout_weight="1">
 
             <TextView
-                android:gravity="center"
-                android:textColor="#fff"
+                android:id="@+id/tv_aqi_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_aqi_date"/>
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="20sp" />
 
             <TextView
-                android:text="AQI指数"
-                android:gravity="center"
-                android:textColor="#fff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_below="@id/tv_aqi_date"
+                android:gravity="center"
+                android:text="AQI指数"
+                android:textColor="#fff"
+                android:textSize="20sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -45,19 +50,21 @@
             android:layout_weight="1">
 
             <TextView
-                android:gravity="center"
-                android:textColor="#fff"
+                android:id="@+id/tv_pm25_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_pm25_date"/>
+                android:gravity="center"
+                android:textColor="#fff"
+                android:textSize="20sp" />
 
             <TextView
-                android:text="PM指数"
-                android:gravity="center"
-                android:textColor="#fff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
+                android:layout_below="@id/tv_pm25_date"
+                android:gravity="center"
+                android:text="PM指数"
+                android:textColor="#fff"
+                android:textSize="20sp" />
         </RelativeLayout>
 
     </LinearLayout>

@@ -5,7 +5,7 @@
 
     <TextView
         android:id="@+id/tv_weather_title"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textColor="#fff"
         android:layout_centerInParent="true"
         android:layout_width="wrap_content"
@@ -13,7 +13,7 @@
 
     <TextView
         android:id="@+id/tv_weather_current_time"
-        android:textSize="16sp"
+        android:textSize="18sp"
         android:textColor="#fff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
