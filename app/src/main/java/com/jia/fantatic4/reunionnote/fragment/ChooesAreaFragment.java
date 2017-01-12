@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,7 +60,7 @@ public class ChooesAreaFragment extends Fragment {
     private ArrayAdapter<String> adapter;
     private TextView tv_title;
     private ListView lv_area;
-    private Button btn;
+    private ImageView btn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,7 @@ public class ChooesAreaFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_area, container, false);
         tv_title = (TextView) view.findViewById(R.id.tv_area_title);
         lv_area = (ListView) view.findViewById(R.id.lv_area);
-        btn = (Button) view.findViewById(R.id.btn_weather_back);
+        btn = (ImageView) view.findViewById(R.id.iv_weather_back);
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, dataList);
         lv_area.setAdapter(adapter);
         return view;
