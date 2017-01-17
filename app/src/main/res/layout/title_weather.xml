@@ -3,6 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:id="@+id/btn_weather_home"
+        android:background="@mipmap/home"/>
+
     <TextView
         android:id="@+id/tv_weather_title"
         android:textSize="24sp"

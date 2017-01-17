@@ -1,36 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
+        android:id="@+id/iv_weather_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/iv_weather_bg"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/sw_refresh"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <ScrollView
-        android:scrollbars="none"
-        android:overScrollMode="never"
-        android:id="@+id/sc_weather"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/sw_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:fitsSystemWindows="true">
+            android:layout_height="match_parent">
 
-            <include layout="@layout/title_weather"/>
-            <include layout="@layout/now_weather"/>
-            <include layout="@layout/forecast_weather"/>
-            <include layout="@layout/aqi"/>
-            <include layout="@layout/suggestion"/>
-        </LinearLayout>
-    </ScrollView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <ScrollView
+                android:id="@+id/sc_weather"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/title_weather" />
+
+                    <include layout="@layout/now_weather" />
+
+                    <include layout="@layout/forecast_weather" />
+
+                    <include layout="@layout/aqi" />
+
+                    <include layout="@layout/suggestion" />
+                </LinearLayout>
+            </ScrollView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <fragment
+            android:id="@+id/fragment_area"
+            android:name="com.jia.fantatic4.reunionnote.fragment.ChooesAreaFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
+    </android.support.v4.widget.DrawerLayout>
 </FrameLayout>

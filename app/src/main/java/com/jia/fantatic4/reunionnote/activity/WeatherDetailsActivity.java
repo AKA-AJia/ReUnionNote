@@ -1,15 +1,19 @@
 package com.jia.fantatic4.reunionnote.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -21,6 +25,7 @@ import com.jia.fantatic4.reunionnote.R;
 import com.jia.fantatic4.reunionnote.bean.Forecast;
 import com.jia.fantatic4.reunionnote.bean.Weather;
 import com.jia.fantatic4.reunionnote.constant.Constant;
+import com.jia.fantatic4.reunionnote.service.AutoUpdateService;
 import com.jia.fantatic4.reunionnote.utils.HttpUtil;
 import com.jia.fantatic4.reunionnote.utils.Utility;
 
@@ -49,9 +54,10 @@ public class WeatherDetailsActivity extends AppCompatActivity {
     private TextView tv_now_tmp;
     private TextView tv_now_status;
     private ImageView iv_weather_bg;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    public SwipeRefreshLayout swipeRefreshLayout;
 
-    private String weatherId;
+    public DrawerLayout drawerLayout;
+    private Button btn_home;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,12 +73,14 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_weather_detail);
         initViews();
         initSpData();
-        initEvent();
+
     }
 
 
 
     private void initViews() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        btn_home = (Button) findViewById(R.id.btn_weather_home);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.sw_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         scrollView = (ScrollView) findViewById(R.id.sc_weather);
@@ -96,6 +104,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
     private void initSpData() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherData = prefs.getString("weather", null);
+        final String weatherId;
         //有缓存
         if (weatherData != null) {
             Weather weather = Utility.handleWeatherResponse(weatherData);
@@ -116,16 +125,28 @@ public class WeatherDetailsActivity extends AppCompatActivity {
         } else {
             loadBingPic();
         }
+
+        initEvent(weatherId);
     }
 
     /**
      * 初始化事件
      */
-    private void initEvent() {
+    private void initEvent(final String weatherId) {
+
+        //下拉刷新
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 requestWeather(weatherId);
+            }
+        });
+
+        //点击打开左侧栏
+        btn_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
             }
         });
     }
@@ -162,7 +183,7 @@ public class WeatherDetailsActivity extends AppCompatActivity {
      * 请求天气数据
      * @param weather_id 天气ID
      */
-    private void requestWeather(String weather_id) {
+    public void requestWeather(String weather_id) {
         String weatherUrl = Constant.WEATHER_BASE_URL + weather_id + Constant.WEATHER_KEY;
         HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
             @Override
@@ -210,45 +231,54 @@ public class WeatherDetailsActivity extends AppCompatActivity {
      * @param weatherInfo 天气bean
      */
     private void showWeatherInfo(Weather weatherInfo) {
-        String cityName = weatherInfo.basic.cityName;
-        String updateTime = weatherInfo.basic.update.updateTime.split(" ")[1];
-        String tmp = weatherInfo.now.temperature + "°C";
-        String now_status = weatherInfo.now.more.info;
-        tv_title.setText(cityName);
-        tv_update_time.setText(updateTime);
-        tv_now_tmp.setText(tmp);
-        tv_now_status.setText(now_status);
+        if (weatherInfo!=null&&"ok".equals(weatherInfo.status)){
+            String cityName = weatherInfo.basic.cityName;
+            String updateTime = weatherInfo.basic.update.updateTime.split(" ")[1];
+            String tmp = weatherInfo.now.temperature + "°C";
+            String now_status = weatherInfo.now.more.info;
+            tv_title.setText(cityName);
+            tv_update_time.setText(updateTime);
+            tv_now_tmp.setText(tmp);
+            tv_now_status.setText(now_status);
 
-        ll_forecast.removeAllViews();
-        for (Forecast forecast : weatherInfo.forecastList) {
-            View view = LayoutInflater
-                    .from(this).inflate(R.layout.forecast_weather_item, ll_forecast, false);
-            TextView tv_date = (TextView) view.findViewById(R.id.tv_forecast_time);
-            TextView tv_stutas = (TextView) view.findViewById(R.id.tv_forecast_status);
-            TextView tv_max = (TextView) view.findViewById(R.id.tv_forecast_max_tmp);
-            TextView tv_min = (TextView) view.findViewById(R.id.tv_forecast_min_tmp);
+            ll_forecast.removeAllViews();
+            for (Forecast forecast : weatherInfo.forecastList) {
+                View view = LayoutInflater
+                        .from(this).inflate(R.layout.forecast_weather_item, ll_forecast, false);
+                TextView tv_date = (TextView) view.findViewById(R.id.tv_forecast_time);
+                TextView tv_stutas = (TextView) view.findViewById(R.id.tv_forecast_status);
+                TextView tv_max = (TextView) view.findViewById(R.id.tv_forecast_max_tmp);
+                TextView tv_min = (TextView) view.findViewById(R.id.tv_forecast_min_tmp);
 
-            tv_date.setText(forecast.date);
-            tv_stutas.setText(forecast.more.info);
-            tv_max.setText(forecast.temperature.max);
-            tv_min.setText(forecast.temperature.min);
+                tv_date.setText(forecast.date);
+                tv_stutas.setText(forecast.more.info);
+                tv_max.setText(forecast.temperature.max);
+                tv_min.setText(forecast.temperature.min);
 
-            ll_forecast.addView(view);
+                ll_forecast.addView(view);
+            }
+
+            if (weatherInfo.aqi != null) {
+                tv_aqi.setText(weatherInfo.aqi.city.aqi);
+                tv_pm.setText(weatherInfo.aqi.city.pm25);
+            }
+
+            String comfort = "舒适度：" + weatherInfo.suggestion.comfort.info;
+            String carWash = "洗车指数：" + weatherInfo.suggestion.carWash.info;
+            String sport = "运动建议：" + weatherInfo.suggestion.sport.info;
+
+            tv_comfort.setText(comfort);
+            tv_carWash.setText(carWash);
+            tv_sport.setText(sport);
+
+            scrollView.setVisibility(View.VISIBLE);
+
+            //开启服务
+            Intent intent=new Intent(this, AutoUpdateService.class);
+            startService(intent);
+        }else {
+            Toast.makeText(this,"更新天气数据失败...",Toast.LENGTH_SHORT).show();
         }
 
-        if (weatherInfo.aqi != null) {
-            tv_aqi.setText(weatherInfo.aqi.city.aqi);
-            tv_pm.setText(weatherInfo.aqi.city.pm25);
-        }
-
-        String comfort = "舒适度：" + weatherInfo.suggestion.comfort.info;
-        String carWash = "洗车指数：" + weatherInfo.suggestion.carWash.info;
-        String sport = "运动建议：" + weatherInfo.suggestion.sport.info;
-
-        tv_comfort.setText(comfort);
-        tv_carWash.setText(carWash);
-        tv_sport.setText(sport);
-
-        scrollView.setVisibility(View.VISIBLE);
     }
 }

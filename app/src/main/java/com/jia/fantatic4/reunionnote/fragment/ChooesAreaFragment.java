@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jia.fantatic4.reunionnote.R;
+import com.jia.fantatic4.reunionnote.activity.WeatherActivity;
 import com.jia.fantatic4.reunionnote.activity.WeatherDetailsActivity;
 import com.jia.fantatic4.reunionnote.constant.Constant;
 import com.jia.fantatic4.reunionnote.db.CityDB;
@@ -93,10 +94,21 @@ public class ChooesAreaFragment extends Fragment {
                     selectedCity=cityList.get(position);
                     queryCounty();
                 }else if (currentLevel==LEVEL_COUNTY){
-                    Intent intent=new Intent(getActivity(), WeatherDetailsActivity.class);
-                    intent.putExtra("weather_id",countyList.get(position).getWeatherId());
-                    startActivity(intent);
-                    getActivity().finish();
+
+                    String weatherId=countyList.get(position).getWeatherId();
+
+                    if (getActivity() instanceof WeatherActivity){
+                        Intent intent=new Intent(getActivity(), WeatherDetailsActivity.class);
+                        intent.putExtra("weather_id",countyList.get(position).getWeatherId());
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if (getActivity() instanceof WeatherDetailsActivity){
+                        WeatherDetailsActivity detailsActivity= (WeatherDetailsActivity) getActivity();
+                        detailsActivity.drawerLayout.closeDrawers();
+                        detailsActivity.swipeRefreshLayout.setRefreshing(true);
+                        detailsActivity.requestWeather(weatherId);
+                    }
+
                 }
             }
         });
