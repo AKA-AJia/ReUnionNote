@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.jia.fantatic4.reunionnote.activity.WeatherActivity;
+import com.jia.fantatic4.reunionnote.mvpDemo.MvpActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_material_design:
-                Toast.makeText(this,"material design",Toast.LENGTH_SHORT).show();
+                Intent mvpIntent=new Intent(this, MvpActivity.class);
+                startActivity(mvpIntent);
                 break;
             case R.id.btn_weather:
                 Intent intent=new Intent(this, WeatherActivity.class);
